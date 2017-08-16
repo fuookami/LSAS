@@ -25,64 +25,69 @@ namespace Fuookami
 	class ArgumentData
 	{
 	public:
-		ArgumentData(const T &data) : m_data(data) {};
-		ArgumentData(const ArgumentData &ano) : m_data(ano.m_data) {};
-		ArgumentData(const ArgumentData &&ano) : m_data(ano.m_data) {};
-		~ArgumentData() {};
+		explicit ArgumentData(const T &data) : m_data(data) {};
+		explicit ArgumentData(const ArgumentData &ano) : m_data(ano.m_data) {};
+		explicit ArgumentData(const ArgumentData &&ano) : m_data(ano.m_data) {};
+		virtual ~ArgumentData() = 0;
 
 		template <typename U>
-		ArgumentData &operator=(const ArgumentData<U> &rop) { m_data = rop.m_data; return *this; }
+		ArgumentData &operator=(const ArgumentData<U> &rhs) { m_data = rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator=(const U &rop) { m_data = rop; return *this; }
+		ArgumentData &operator=(const U &rhs) { m_data = rhs; return *this; }
 		template <typename U>
-		ArgumentData &operator=(const ArgumentData<U> &&rop) { m_data = rop.m_data; return *this; }
+		ArgumentData &operator=(const ArgumentData<U> &&rhs) { m_data = rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator=(const U &&rop) { m_data = rop; return *this; }
+		ArgumentData &operator=(const U &&rhs) { m_data = rhs; return *this; }
 
 		template <typename U>
-		ArgumentData operator+(const ArgumentData<U> &rop) { return ArgumentData(m_data + rop.m_data); }
+		ArgumentData operator+(const ArgumentData<U> &rhs) { return ArgumentData(m_data + rhs.m_data); }
 		template <typename U>
-		ArgumentData operator+(const U &rop) { return ArgumentData(m_data + rop); }
+		ArgumentData operator+(const U &rhs) { return ArgumentData(m_data + rhs); }
 		template <typename U>
-		ArgumentData &operator+=(const ArgumentData<U> &rop) { m_data += rop.m_data; return *this; }
+		ArgumentData &operator+=(const ArgumentData<U> &rhs) { m_data += rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator+=(const U &rop) { m_data += rop; return *this; }
+		ArgumentData &operator+=(const U &rhs) { m_data += rhs; return *this; }
 
 		template <typename U>
-		ArgumentData operator-(const ArgumentData<U> &&rop) { return ArgumentData(m_data - rop.m_data); }
+		ArgumentData operator-(const ArgumentData<U> &&rhs) { return ArgumentData(m_data - rhs.m_data); }
 		template <typename U>
-		ArgumentData operator-(const U &rop) { return ArgumentData(m_data - rop); }
+		ArgumentData operator-(const U &rhs) { return ArgumentData(m_data - rhs); }
 		template <typename U>
-		ArgumentData &operator-=(const ArgumentData<U> &&rop) { m_data -= rop.m_data; return *this; }
+		ArgumentData &operator-=(const ArgumentData<U> &&rhs) { m_data -= rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator-=(const U &rop) { m_data -= rop; return *this; }
+		ArgumentData &operator-=(const U &rhs) { m_data -= rhs; return *this; }
 
 		template <typename U>
-		ArgumentData operator*(const ArgumentData<U> &rop) { return ArgumentData(m_data * rop.m_data); }
+		ArgumentData operator*(const ArgumentData<U> &rhs) { return ArgumentData(m_data * rhs.m_data); }
 		template <typename U>
-		ArgumentData operator*(const U &rop) { return ArgumentData(m_data * rop); }
+		ArgumentData operator*(const U &rhs) { return ArgumentData(m_data * rhs); }
 		template <typename U>
-		ArgumentData &operator*=(const ArgumentData<U> &rop) { m_data *= rop.m_data; return *this; }
+		ArgumentData &operator*=(const ArgumentData<U> &rhs) { m_data *= rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator*=(const U &rop) { m_data *= rop; return *this; }
+		ArgumentData &operator*=(const U &rhs) { m_data *= rhs; return *this; }
 
 		template <typename U>
-		ArgumentData operator/(const ArgumentData<U> &&rop) { return ArgumentData(m_data / rop.m_data); }
+		ArgumentData operator/(const ArgumentData<U> &&rhs) { return ArgumentData(m_data / rhs.m_data); }
 		template <typename U>
-		ArgumentData operator/(const U &rop) { return ArgumentData(m_data / rop); }
+		ArgumentData operator/(const U &rhs) { return ArgumentData(m_data / rhs); }
 		template <typename U>
-		ArgumentData &operator/=(const ArgumentData<U> &&rop) { m_data /= rop.m_data; return *this; }
+		ArgumentData &operator/=(const ArgumentData<U> &&rhs) { m_data /= rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator/=(const U &rop) { m_data /= rop; return *this; }
+		ArgumentData &operator/=(const U &rhs) { m_data /= rhs; return *this; }
 
 		template <typename U>
-		ArgumentData operator%(const ArgumentData<U> &&rop) { return ArgumentData(m_data % rop.m_data); }
+		ArgumentData operator%(const ArgumentData<U> &&rhs) { return ArgumentData(m_data % rhs.m_data); }
 		template <typename U>
-		ArgumentData operator%(const U &rop) { return ArgumentData(m_data % rop); }
+		ArgumentData operator%(const U &rhs) { return ArgumentData(m_data % rhs); }
 		template <typename U>
-		ArgumentData &operator%=(const ArgumentData<U> &&rop) { m_data %= rop.m_data; return *this; }
+		ArgumentData &operator%=(const ArgumentData<U> &&rhs) { m_data %= rhs.m_data; return *this; }
 		template <typename U>
-		ArgumentData &operator%=(const U &rop) { m_data %= rop; return *this; }
+		ArgumentData &operator%=(const U &rhs) { m_data %= rhs; return *this; }
+
+		ArgumentData &operator++(void) { ++m_data; return *this; }
+		ArgumentData &operator++(const int i) { ++m_data; return *this; }
+		ArgumentData &operator--(void) { --m_data; return *this; }
+		ArgumentData &operator--(const int i) { --m_data; return *this; }
 
 		inline T &data() { return m_data; }
 		inline const T &data() const { return m_data; }
@@ -98,54 +103,54 @@ template <typename T>
 std::ostream &operator<<(std::ostream &os, const Fuookami::ArgumentData<T> &data) { os << data.data(); return os; }
 
 template <typename T, typename U>
-bool operator==(const Fuookami::ArgumentData<T> &lop, const Fuookami::ArgumentData<U> &rop) { return lop.data() == rop.data(); }
+bool operator==(const Fuookami::ArgumentData<T> &lhs, const Fuookami::ArgumentData<U> &rhs) { return lhs.data() == rhs.data(); }
 template <typename T, typename U>
-bool operator==(const Fuookami::ArgumentData<T> &lop, const U &rop) { return lop.data() == rop; }
+bool operator==(const Fuookami::ArgumentData<T> &lhs, const U &rhs) { return lhs.data() == rhs; }
 template <typename T, typename U>
-bool operator==(const U &lop, const Fuookami::ArgumentData<T> &rop) { return lop == rop.data(); }
+bool operator==(const U &lhs, const Fuookami::ArgumentData<T> &rhs) { return lhs == rhs.data(); }
 
 template <typename T, typename U>
-bool operator!=(const Fuookami::ArgumentData<T> &lop, const Fuookami::ArgumentData<U> &rop) { return lop.data() != rop.data(); }
+bool operator!=(const Fuookami::ArgumentData<T> &lhs, const Fuookami::ArgumentData<U> &rhs) { return lhs.data() != rhs.data(); }
 template <typename T, typename U>
-bool operator!=(const Fuookami::ArgumentData<T> &lop, const U &rop) { return lop.data() != rop; }
+bool operator!=(const Fuookami::ArgumentData<T> &lhs, const U &rhs) { return lhs.data() != rhs; }
 template <typename T, typename U>
-bool operator!=(const U &lop, const Fuookami::ArgumentData<T> &rop) { return lop != rop.data(); }
+bool operator!=(const U &lhs, const Fuookami::ArgumentData<T> &rhs) { return lhs != rhs.data(); }
 
 template <typename T, typename U>
-bool operator<(const Fuookami::ArgumentData<T> &lop, const Fuookami::ArgumentData<U> &rop) { return lop.data() < rop.data(); }
+bool operator<(const Fuookami::ArgumentData<T> &lhs, const Fuookami::ArgumentData<U> &rhs) { return lhs.data() < rhs.data(); }
 template <typename T, typename U>
-bool operator<(const Fuookami::ArgumentData<T> &lop, const U &rop) { return lop.data() < rop; }
+bool operator<(const Fuookami::ArgumentData<T> &lhs, const U &rhs) { return lhs.data() < rhs; }
 template <typename T, typename U>
-bool operator<(const U &lop, const Fuookami::ArgumentData<T> &rop) { return lop < rop.data(); }
+bool operator<(const U &lhs, const Fuookami::ArgumentData<T> &rhs) { return lhs < rhs.data(); }
 
 template <typename T, typename U>
-bool operator>(const Fuookami::ArgumentData<T> &lop, const Fuookami::ArgumentData<U> &rop) { return lop.data() > rop.data(); }
+bool operator>(const Fuookami::ArgumentData<T> &lhs, const Fuookami::ArgumentData<U> &rhs) { return lhs.data() > rhs.data(); }
 template <typename T, typename U>
-bool operator>(const Fuookami::ArgumentData<T> &lop, const U &rop) { return lop.data() > rop; }
+bool operator>(const Fuookami::ArgumentData<T> &lhs, const U &rhs) { return lhs.data() > rhs; }
 template <typename T, typename U>
-bool operator>(const U &lop, const Fuookami::ArgumentData<T> &rop) { return lop > rop.data(); }
+bool operator>(const U &lhs, const Fuookami::ArgumentData<T> &rhs) { return lhs > rhs.data(); }
 
 template <typename T, typename U>
-bool operator<=(const Fuookami::ArgumentData<T> &lop, const Fuookami::ArgumentData<U> &rop) { return lop.data() <= rop.data(); }
+bool operator<=(const Fuookami::ArgumentData<T> &lhs, const Fuookami::ArgumentData<U> &rhs) { return lhs.data() <= rhs.data(); }
 template <typename T, typename U>
-bool operator<=(const Fuookami::ArgumentData<T> &lop, const U &rop) { return lop.data() <= rop; }
+bool operator<=(const Fuookami::ArgumentData<T> &lhs, const U &rhs) { return lhs.data() <= rhs; }
 template <typename T, typename U>
-bool operator<=(const U &lop, const Fuookami::ArgumentData<T> &rop) { return lop <= rop.data(); }
+bool operator<=(const U &lhs, const Fuookami::ArgumentData<T> &rhs) { return lhs <= rhs.data(); }
 
 template <typename T, typename U>
-bool operator>=(const Fuookami::ArgumentData<T> &lop, const Fuookami::ArgumentData<U> &rop) { return lop.data() >= rop.data(); }
+bool operator>=(const Fuookami::ArgumentData<T> &lhs, const Fuookami::ArgumentData<U> &rhs) { return lhs.data() >= rhs.data(); }
 template <typename T, typename U>
-bool operator>=(const Fuookami::ArgumentData<T> &lop, const U &rop) { return lop.data() >= rop; }
+bool operator>=(const Fuookami::ArgumentData<T> &lhs, const U &rhs) { return lhs.data() >= rhs; }
 template <typename T, typename U>
-bool operator>=(const U &lop, const Fuookami::ArgumentData<T> &rop) { return lop >= rop.data(); }
+bool operator>=(const U &lhs, const Fuookami::ArgumentData<T> &rhs) { return lhs >= rhs.data(); }
 
 template <typename T, typename U>
-T operator+(const T &lop, const Fuookami::ArgumentData<U> &rop) { return T(lop + rop.data()); }
+T operator+(const T &lhs, const Fuookami::ArgumentData<U> &rhs) { return T(lhs + rhs.data()); }
 template <typename T, typename U>
-T operator-(const T &lop, const Fuookami::ArgumentData<U> &rop) { return T(lop - rop.data()); }
+T operator-(const T &lhs, const Fuookami::ArgumentData<U> &rhs) { return T(lhs - rhs.data()); }
 template <typename T, typename U>
-T operator*(const T &lop, const Fuookami::ArgumentData<U> &rop) { return T(lop * rop.data()); }
+T operator*(const T &lhs, const Fuookami::ArgumentData<U> &rhs) { return T(lhs * rhs.data()); }
 template <typename T, typename U>
-T operator/(const T &lop, const Fuookami::ArgumentData<U> &rop) { return T(lop / rop.data()); }
+T operator/(const T &lhs, const Fuookami::ArgumentData<U> &rhs) { return T(lhs / rhs.data()); }
 template <typename T, typename U>
-T operator%(const T &lop, const Fuookami::ArgumentData<U> &rop) { return T(lop % rop.data()); }
+T operator%(const T &lhs, const Fuookami::ArgumentData<U> &rhs) { return T(lhs % rhs.data()); }

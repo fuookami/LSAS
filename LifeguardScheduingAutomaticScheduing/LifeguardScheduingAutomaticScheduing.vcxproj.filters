@@ -38,15 +38,12 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="Header Files\include">
-      <UniqueIdentifier>{2b1c2a66-b733-4cd7-9cc7-248a556dc6d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\include\basic">
-      <UniqueIdentifier>{8af4c3af-3d4b-4aa9-9f2b-822f95e140fe}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Date.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -57,14 +54,14 @@
     <ClInclude Include="Work.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LSASGlobal.h">
-      <Filter>Header Files\include</Filter>
+    <ClInclude Include="ArgumentData.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Date.h">
-      <Filter>Header Files\include\basic</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArgumentData.h">
-      <Filter>Header Files\include\basic</Filter>
+    <ClInclude Include="LSASGlobal.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
