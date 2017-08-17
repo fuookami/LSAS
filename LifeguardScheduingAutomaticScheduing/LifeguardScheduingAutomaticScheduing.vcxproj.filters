@@ -43,21 +43,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Date.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Work.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ArgumentData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Date.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LSASGlobal.h">
