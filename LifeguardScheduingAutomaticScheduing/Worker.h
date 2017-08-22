@@ -20,7 +20,7 @@ namespace LSAS
 		const uint32 wantedWorkNum(void) const;
 
 		const std::vector<std::reference_wrapper<Work>> &allocatedWork(void) const;
-		void addAllocatedWork(const std::set<std::reference_wrapper<Work>> &newAllcatedWork);
+		void addAllocatedWork(const std::reference_wrapper<Work> &newAllcatedWork);
 		const uint32 allocatedWorkNum(void) const;
 
 	private:

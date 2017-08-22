@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "LSASGlobal.h"
+#include <memory>
 
 namespace LSAS
 {
@@ -21,6 +22,7 @@ namespace LSAS
 		void setWantedWorkders(const std::set<std::reference_wrapper<Worker>> &wantedWorkers);
 		
 		const std::set<std::reference_wrapper<Worker>> &getSelectedWorkers(void) const;
+		bool hasSelected(const std::reference_wrapper<Worker> &worker);
 		void addSelectedWorkers(const std::set<std::reference_wrapper<Worker>> &workers);
 
 		std::set<std::reference_wrapper<Worker>> getWantedBunNotSelectedWorkers(void) const;
@@ -43,7 +45,10 @@ namespace LSAS
 		~WorkTable() {};
 
 		std::string toTemplate(void) const;
-		static WorkTable fromTemplate(const std::string &buf);
+		static std::shared_ptr<WorkTable> fromTemplate(const std::string &buf);
+
+		std::string toBuf(void) const;
+		static std::shared_ptr<WorkTable> fromBuf(const std::string &buf);
 
 		std::vector<PeriodWorkTable> &table(void);
 		const std::vector<PeriodWorkTable> &table(void) const;
