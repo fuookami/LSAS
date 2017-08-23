@@ -66,10 +66,12 @@ namespace LSAS
 		void clearWorkTable(void);
 
 	private:
-		static void generatePeriodWorkTableProcess(PeriodWorkTable *periodWork);
+		//static void generatePeriodWorkTableProcess(PeriodWorkTable *periodWork);
 
 	private:
 		std::set<std::string> m_types;
 		std::map<std::string, PeriodWorkTable> m_tables;
 	};
+
+	void generatePeriodWorkTableProcess(PeriodWorkTable *periodWork);
 };

@@ -18,7 +18,7 @@ namespace LSAS
 
 	class Work;
 	using DailyWorkTable = std::vector<Work>;
-	using PeriodWorkTable = std::vector<PeriodWorkTable>;
+	using PeriodWorkTable = std::vector<DailyWorkTable>;
 	class WorkTable;
 
 	class Worker;

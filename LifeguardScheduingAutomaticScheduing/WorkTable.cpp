@@ -1,4 +1,5 @@
 #include "Work.h"
+#include <thread>
 
 namespace LSAS
 {
@@ -63,7 +64,7 @@ namespace LSAS
 
 		for (auto &tablePair : m_tables)
 		{
-			
+			threads.push_back(std::thread(generatePeriodWorkTableProcess, &(tablePair.second)));
 		}
 
 		for (auto &thread : threads)
