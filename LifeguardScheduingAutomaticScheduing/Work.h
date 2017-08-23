@@ -2,6 +2,7 @@
 
 #include "LSASGlobal.h"
 #include <memory>
+#include <map>
 
 namespace LSAS
 {
@@ -41,28 +42,34 @@ namespace LSAS
 	class WorkTable
 	{
 	public:
-		WorkTable() : m_table() {};
+		WorkTable() : m_types(), m_tables() {};
 		~WorkTable() {};
 
-		std::string toTemplate(void) const;
-		static std::shared_ptr<WorkTable> fromTemplate(const std::string &buf);
+		std::string toTemplateBuf(void) const;
+		static std::shared_ptr<WorkTable> fromTemplateBuf(const std::string &buf);
 
-		std::string toBuf(void) const;
-		static std::shared_ptr<WorkTable> fromBuf(const std::string &buf);
+		std::map<std::string, PeriodWorkTable> &tables(void);
+		const std::map<std::string, PeriodWorkTable> &tables(void) const;
 
-		std::vector<PeriodWorkTable> &table(void);
-		const std::vector<PeriodWorkTable> &table(void) const;
+		const std::set<std::string> &types(void) const;
 
-		PeriodWorkTable &tableOfType(const uint32 type);
-		const PeriodWorkTable &tableOfType(const uint32 type) const;
+		std::map<std::string, PeriodWorkTable>::iterator findType(const std::string &type);
+		std::map<std::string, PeriodWorkTable>::const_iterator findType(const std::string &type) const;
+		bool existType(const std::string &type) const;
+		bool addType(const std::string &type);
+		bool removeType(const std::string &type);
+
+		PeriodWorkTable &tableOfType(const std::string type);
+		const PeriodWorkTable &tableOfType(const std::string type) const;
 
 		void generateWorkTable(void);
 		void clearWorkTable(void);
 
 	private:
-		static void generatePeriodWorkTable(PeriodWorkTable &periodWork);
+		static void generatePeriodWorkTableProcess(PeriodWorkTable *periodWork);
 
 	private:
-		std::vector<PeriodWorkTable> m_table;
+		std::set<std::string> m_types;
+		std::map<std::string, PeriodWorkTable> m_tables;
 	};
 };
