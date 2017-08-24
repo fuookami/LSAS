@@ -8,12 +8,12 @@ namespace LSAS
 		return m_types;
 	}
 
-	std::map<std::string, PeriodWorkTable>::iterator WorkTable::findType(const std::string & type)
+	std::map<std::string, WorkTable::Table>::iterator WorkTable::findType(const std::string & type)
 	{
 		return m_tables.find(type);
 	}
 
-	std::map<std::string, PeriodWorkTable>::const_iterator WorkTable::findType(const std::string & type) const
+	std::map<std::string, WorkTable::Table>::const_iterator WorkTable::findType(const std::string & type) const
 	{
 		return m_tables.find(type);
 	}
@@ -50,26 +50,56 @@ namespace LSAS
 
 	PeriodWorkTable & WorkTable::tableOfType(const std::string type)
 	{
-		return findType(type)->second;
+		return findType(type)->second.table;
 	}
 
 	const PeriodWorkTable & WorkTable::tableOfType(const std::string type) const
 	{
-		return findType(type)->second;
+		return findType(type)->second.table;
 	}
 
 	void WorkTable::generateWorkTable(void)
 	{
+		static std::function<uint32(const PeriodWorkTable &)> calScoreProcss(calScore);
+		static auto process(
+			[&calScoreProcss](Table *table) 
+		{
+			for (auto &dailyWorkTable : table->table)
+			{
+				for (auto &work : dailyWorkTable)
+				{
+					work.clearSelectedWorkers();
+				}
+			}
+
+			table->process(table->table);
+			table->score = calScoreProcss(table->table);
+		});
+
 		std::vector<std::thread> threads;
 
 		for (auto &tablePair : m_tables)
 		{
-			threads.push_back(std::thread(generatePeriodWorkTableProcess, &(tablePair.second)));
+			threads.push_back(std::thread(process, &tablePair));
 		}
 
 		for (auto &thread : threads)
 		{
 			thread.join();
+		}
+	}
+
+	void WorkTable::clearWorkTable(void)
+	{
+		for (auto &tablePair : m_tables)
+		{
+			for (auto &dailyWorkTable : tablePair.second.table)
+			{
+				for (auto &work : dailyWorkTable)
+				{
+					work.clearSelectedWorkers();
+				}
+			}
 		}
 	}
 };

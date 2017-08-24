@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <memory>
+#include <functional>
 
 namespace LSAS
 {
@@ -20,6 +21,8 @@ namespace LSAS
 	using DailyWorkTable = std::vector<Work>;
 	using PeriodWorkTable = std::vector<DailyWorkTable>;
 	class WorkTable;
+
+	using GeneratePeriodWorkTableProcess = std::function<void (PeriodWorkTable &)>;
 
 	class Worker;
 	using WorkerSet = std::set<std::shared_ptr<Worker>>;

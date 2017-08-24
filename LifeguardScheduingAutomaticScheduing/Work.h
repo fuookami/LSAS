@@ -42,21 +42,25 @@ namespace LSAS
 	class WorkTable
 	{
 	public:
+		struct Table
+		{
+			PeriodWorkTable table;
+			GeneratePeriodWorkTableProcess process;
+			uint32 score = 0xffffffff;
+		};
+
 		WorkTable() : m_types(), m_tables() {};
 		~WorkTable() {};
 
 		std::string toTemplateBuf(void) const;
 		static std::shared_ptr<WorkTable> fromTemplateBuf(const std::string &buf);
 
-		std::map<std::string, PeriodWorkTable> &tables(void);
-		const std::map<std::string, PeriodWorkTable> &tables(void) const;
-
 		const std::set<std::string> &types(void) const;
 
-		std::map<std::string, PeriodWorkTable>::iterator findType(const std::string &type);
-		std::map<std::string, PeriodWorkTable>::const_iterator findType(const std::string &type) const;
+		std::map<std::string, Table>::iterator findType(const std::string &type);
+		std::map<std::string, Table>::const_iterator findType(const std::string &type) const;
 		bool existType(const std::string &type) const;
-		bool addType(const std::string &type);
+		bool addType(const std::string &type, GeneratePeriodWorkTableProcess = GeneratePeriodWorkTableProcesses::DefaultGeneratePeriodWorkTableProcess);
 		bool removeType(const std::string &type);
 
 		PeriodWorkTable &tableOfType(const std::string type);
@@ -66,12 +70,17 @@ namespace LSAS
 		void clearWorkTable(void);
 
 	private:
-		//static void generatePeriodWorkTableProcess(PeriodWorkTable *periodWork);
+		uint32 calScore(const PeriodWorkTable &table);
 
 	private:
 		std::set<std::string> m_types;
-		std::map<std::string, PeriodWorkTable> m_tables;
+		std::map<std::string, Table> m_tables;
 	};
 
-	void generatePeriodWorkTableProcess(PeriodWorkTable *periodWork);
+	namespace GeneratePeriodWorkTableProcesses
+	{
+		void processFullFirst(PeriodWorkTable &periodWork);
+
+		static const GeneratePeriodWorkTableProcess DefaultGeneratePeriodWorkTableProcess = processFullFirst;
+	};
 };
