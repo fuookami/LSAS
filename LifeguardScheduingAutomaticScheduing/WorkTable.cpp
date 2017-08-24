@@ -23,7 +23,7 @@ namespace LSAS
 		return m_types.find(type) != m_types.cend();
 	}
 
-	bool WorkTable::addType(const std::string &type)
+	bool WorkTable::addType(const std::string &type, GeneratePeriodWorkTableProcess process /* = GeneratePeriodWorkTableProcesses::DefaultGeneratePeriodWorkTableProcess */)
 	{
 		if (existType(type))
 		{
@@ -31,7 +31,7 @@ namespace LSAS
 		}
 
 		m_types.insert(type);
-		m_tables.insert(std::make_pair(type, PeriodWorkTable()));
+		m_tables.insert(std::make_pair(type, Table({PeriodWorkTable(), process})));
 		return true;
 	}
 
@@ -60,9 +60,8 @@ namespace LSAS
 
 	void WorkTable::generateWorkTable(void)
 	{
-		static std::function<uint32(const PeriodWorkTable &)> calScoreProcss(calScore);
 		static auto process(
-			[&calScoreProcss](Table *table) 
+			[](Table *table) 
 		{
 			for (auto &dailyWorkTable : table->table)
 			{
@@ -73,7 +72,7 @@ namespace LSAS
 			}
 
 			table->process(table->table);
-			table->score = calScoreProcss(table->table);
+			table->score = calScore(table->table);
 		});
 
 		std::vector<std::thread> threads;
