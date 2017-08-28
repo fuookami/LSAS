@@ -5,13 +5,12 @@
 namespace LSAS
 {
 	Work::Work(const uint32 id, const uint8 orderInDay)
-		: m_id(id), m_orderInDay(orderInDay), m_activated(false)
+		: m_id(id), m_orderInDay(orderInDay), m_activated(false), m_needPeopleNum(0)
 	{
 	}
 
 	Work::Work(const uint32 id, const uint8 orderInDay, const uint8 needPeopleNum)
-		: m_id(id), m_orderInDay(orderInDay), m_activated(true),
-		m_needPeopleNum(needPeopleNum)
+		: m_id(id), m_orderInDay(orderInDay), m_activated(true), m_needPeopleNum(needPeopleNum)
 	{
 	}
 

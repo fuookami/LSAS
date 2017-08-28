@@ -1,8 +1,42 @@
 #include "Work.h"
 #include <thread>
+#include <sstream>
+#include "Work.h"
 
 namespace LSAS
 {
+	std::string WorkTable::toTemplateBuf(void) const
+	{
+		std::ostringstream sout;
+
+		sout << m_types.size() << std::endl;
+		for (const std::string &type : m_types)
+		{
+			sout << type << std::endl;
+
+			const PeriodWorkTable &table(m_tables[type].table);
+			sout << table.size() << std::endl;
+
+			for (const DailyWorkTable &dailyWorkTable : table)
+			{
+				sout << dailyWorkTable.size() << std::endl;
+				
+				for (const Work &work : dailyWorkTable)
+				{
+					sout << work.id() << ' ' << work.orderInDay() << ' ' << (work.activated() ? 1 : 0) << ' ' << work.needPeopleNum() << std::endl;
+				}
+			}
+		}
+
+		std::string &ret(sout.str());
+		return std::move(ret);
+	}
+
+	std::shared_ptr<WorkTable> WorkTable::fromTemplateBuf(const std::string & buf)
+	{
+		return std::shared_ptr<WorkTable>();
+	}
+
 	const std::set<std::string>& WorkTable::types(void) const
 	{
 		return m_types;
@@ -100,5 +134,17 @@ namespace LSAS
 				}
 			}
 		}
+	}
+	uint32 WorkTable::calScore(const PeriodWorkTable & table)
+	{
+		uint32 ret(0);
+		for (const DailyWorkTable &dailyWorkTable : table)
+		{
+			for (const Work &work : dailyWorkTable)
+			{
+				ret += work.stillNeedPeopleNum();
+			}
+		}
+		return ret;
 	}
 };

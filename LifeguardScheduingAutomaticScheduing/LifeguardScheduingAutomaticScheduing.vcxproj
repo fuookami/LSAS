@@ -73,6 +73,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Work.cpp" />
     <ClCompile Include="WorkTable.cpp" />
+    <ClCompile Include="WorkTableGenerateProcesses.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LSASGlobal.h" />
