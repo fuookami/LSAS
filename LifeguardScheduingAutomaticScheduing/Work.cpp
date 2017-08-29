@@ -4,6 +4,17 @@
 
 namespace LSAS
 {
+	Work::Work(const std::string buf)
+		: m_id((static_cast<uint32>(buf[0]) << 24)
+			| (static_cast<uint32>(buf[1]) << 16)
+			| (static_cast<uint32>(buf[2]) << 8)
+			| (static_cast<uint32>(buf[3]))),
+		m_orderInDay(static_cast<uint8>(buf[4])), 
+		m_activated(static_cast<uint8>(buf[5]) == 1),
+		m_needPeopleNum(static_cast<uint8>(buf[6]))
+	{
+	}
+
 	Work::Work(const uint32 id, const uint8 orderInDay)
 		: m_id(id), m_orderInDay(orderInDay), m_activated(false), m_needPeopleNum(0)
 	{
@@ -85,5 +96,21 @@ namespace LSAS
 	void Work::clearSelectedWorkers(void)
 	{
 		m_selectedWorker.clear();
+	}
+
+	const std::string Work::toBuf(void) const
+	{
+		std::string ret;
+		ret.resize(7);
+
+		ret[0] = static_cast<uint8>((m_id >> 24) & 0x000000ff);
+		ret[1] = static_cast<uint8>((m_id >> 16) & 0x000000ff);
+		ret[2] = static_cast<uint8>((m_id >> 8) & 0x000000ff);
+		ret[3] = static_cast<uint8>(m_id & 0x000000ff);
+		ret[4] = m_orderInDay;
+		ret[5] = m_activated ? 1 : 0;
+		ret[6] = m_needPeopleNum;
+
+		return ret;
 	}
 };

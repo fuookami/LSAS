@@ -5,6 +5,16 @@
 
 namespace LSAS
 {
+	WorkTable::Table::Table(const GeneratePeriodWorkTableProcesses::Processes _processId)
+		: table(), processId(_processId), process(GeneratePeriodWorkTableProcesses::getProcess(_processId)), score(0xffffffff)
+	{
+	}
+
+	WorkTable::Table::Table(const PeriodWorkTable && _table, const GeneratePeriodWorkTableProcesses::Processes _processId)
+		: table(std::move(_table)), processId(_processId), process(GeneratePeriodWorkTableProcesses::getProcess(_processId)), score(0xffffffff)
+	{
+	}
+
 	std::string WorkTable::toTemplateBuf(void) const
 	{
 		std::ostringstream sout;
@@ -14,16 +24,17 @@ namespace LSAS
 		{
 			sout << type << std::endl;
 
-			const PeriodWorkTable &table(m_tables[type].table);
-			sout << table.size() << std::endl;
+			const Table &table(m_tables.find(type)->second);
+			const PeriodWorkTable &periodWorkTable(table.table);
+			sout << periodWorkTable.size() << ' ' << table.processId << std::endl;
 
-			for (const DailyWorkTable &dailyWorkTable : table)
+			for (const DailyWorkTable &dailyWorkTable : periodWorkTable)
 			{
 				sout << dailyWorkTable.size() << std::endl;
 				
 				for (const Work &work : dailyWorkTable)
 				{
-					sout << work.id() << ' ' << work.orderInDay() << ' ' << (work.activated() ? 1 : 0) << ' ' << work.needPeopleNum() << std::endl;
+					sout << work.toBuf() << std::endl;;
 				}
 			}
 		}
@@ -34,7 +45,44 @@ namespace LSAS
 
 	std::shared_ptr<WorkTable> WorkTable::fromTemplateBuf(const std::string & buf)
 	{
-		return std::shared_ptr<WorkTable>();
+		std::shared_ptr<WorkTable> ret(new WorkTable());
+		std::istringstream sin(buf);
+
+		uint32 typeSize(0);
+		sin >> typeSize;
+		for (uint32 i(0); i != typeSize; ++i)
+		{
+			std::string type;
+			getline(sin, type);
+			
+			uint32 periodWorkTableSize(0), processId(0);
+			sin >> periodWorkTableSize >> processId;
+
+			ret->addType(type, GeneratePeriodWorkTableProcesses::Processes(processId));
+			PeriodWorkTable &table(ret->tableOfType(type));
+			table.resize(periodWorkTableSize);
+
+			for (uint32 j(0); j != periodWorkTableSize; ++j)
+			{
+				uint32 dailyWorkTableSize(0);
+				sin >> dailyWorkTableSize;
+
+				DailyWorkTable dailyWorkTable;
+				dailyWorkTable.resize(dailyWorkTableSize);
+
+				for (uint32 k(0); k != dailyWorkTableSize; ++k)
+				{
+					std::string buf;
+					getline(sin, buf);
+
+					dailyWorkTable.push_back(Work(buf));
+				}
+
+				table.push_back(std::move(dailyWorkTable));
+			}
+		}
+
+		return ret;
 	}
 
 	const std::set<std::string>& WorkTable::types(void) const
@@ -57,7 +105,7 @@ namespace LSAS
 		return m_types.find(type) != m_types.cend();
 	}
 
-	bool WorkTable::addType(const std::string &type, GeneratePeriodWorkTableProcess process /* = GeneratePeriodWorkTableProcesses::DefaultGeneratePeriodWorkTableProcess */)
+	bool WorkTable::addType(const std::string & type, GeneratePeriodWorkTableProcesses::Processes processId)
 	{
 		if (existType(type))
 		{
@@ -65,7 +113,7 @@ namespace LSAS
 		}
 
 		m_types.insert(type);
-		m_tables.insert(std::make_pair(type, Table({PeriodWorkTable(), process})));
+		m_tables.insert(std::make_pair(type, Table()));
 		return true;
 	}
 

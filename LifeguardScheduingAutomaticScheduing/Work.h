@@ -9,6 +9,7 @@ namespace LSAS
 	class Work
 	{
 	public:
+		Work(const std::string buf);
 		Work(const uint32 id, const uint8 orderInDay);
 		Work(const uint32 id, const uint8 orderInDay, const uint8 needPeopleNum);
 
@@ -29,6 +30,8 @@ namespace LSAS
 		std::set<std::reference_wrapper<Worker>> getWantedBunNotSelectedWorkers(void) const;
 		void clearSelectedWorkers(void);
 
+		const std::string toBuf(void) const;
+
 	private:
 		uint32 m_id;
 		uint8 m_orderInDay;		// 在一天中的序号
@@ -41,9 +44,21 @@ namespace LSAS
 
 	namespace GeneratePeriodWorkTableProcesses
 	{
+		enum Processes
+		{
+			FullFirst
+		};
+
 		void processFullFirst(PeriodWorkTable &periodWork);
 
-		static const GeneratePeriodWorkTableProcess DefaultGeneratePeriodWorkTableProcess = processFullFirst;
+		static const Processes DefaultProcessId = Processes::FullFirst;
+
+		static const std::vector<std::pair<Processes, GeneratePeriodWorkTableProcess>> ProcessMap =
+		{
+			std::make_pair(Processes::FullFirst, processFullFirst)
+		};
+
+		const GeneratePeriodWorkTableProcess getProcess(const Processes processId);
 	};
 
 	class WorkTable
@@ -52,8 +67,13 @@ namespace LSAS
 		struct Table
 		{
 			PeriodWorkTable table;
+			GeneratePeriodWorkTableProcesses::Processes processId;
 			GeneratePeriodWorkTableProcess process;
-			uint32 score = 0xffffffff;
+			uint32 score;
+
+			Table(const GeneratePeriodWorkTableProcesses::Processes _processId = GeneratePeriodWorkTableProcesses::DefaultProcessId);
+			Table(const PeriodWorkTable &&_table, const GeneratePeriodWorkTableProcesses::Processes _processId);
+			~Table() {};
 		};
 
 		WorkTable() : m_types(), m_tables() {};
@@ -67,7 +87,7 @@ namespace LSAS
 		std::map<std::string, Table>::iterator findType(const std::string &type);
 		std::map<std::string, Table>::const_iterator findType(const std::string &type) const;
 		bool existType(const std::string &type) const;
-		bool addType(const std::string &type, GeneratePeriodWorkTableProcess process = GeneratePeriodWorkTableProcesses::DefaultGeneratePeriodWorkTableProcess);
+		bool addType(const std::string &type, GeneratePeriodWorkTableProcesses::Processes processId = GeneratePeriodWorkTableProcesses::DefaultProcessId);
 		bool removeType(const std::string &type);
 
 		PeriodWorkTable &tableOfType(const std::string type);
